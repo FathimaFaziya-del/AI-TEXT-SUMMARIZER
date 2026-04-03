@@ -1,4 +1,5 @@
-# AI Text Summarizer
+>🚧 **Status: Work In Progress** — This project is currently under active development.
+
 # AI Text Summarizer
 
 An AI-powered text summarization web app built with React and Tailwind CSS.
