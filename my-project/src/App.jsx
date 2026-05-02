@@ -46,11 +46,11 @@ const summarizeText = async () => {
 
     let result = "";
     if (Array.isArray(content)) {
-    setSummary(content[0]?.text || "No summary returned.");
+      result = content[0]?.text || "No summary returned.";
     } else if (typeof content === "string") {
-    setSummary(content);
+      result = content;
     } else {
-    setSummary("No summary returned.");
+      result = "No summary returned.";
     }
     
     setSummary(result);
