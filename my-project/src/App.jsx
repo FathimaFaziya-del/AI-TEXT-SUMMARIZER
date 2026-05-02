@@ -41,8 +41,20 @@ const summarizeText = async () => {
   try {
     // uses selected prompt instead of hardcoded one
     const response = await window.puter.ai.chat(prompts[length]);
-    const result = response.message?.content || "No summary returned.";
+    const content = response.message?.content;
+
+
+    let result = "";
+    if (Array.isArray(content)) {
+    setSummary(content[0]?.text || "No summary returned.");
+    } else if (typeof content === "string") {
+    setSummary(content);
+    } else {
+    setSummary("No summary returned.");
+    }
+    
     setSummary(result);
+
 
     // Save to History
     setHistory((prev) => [
