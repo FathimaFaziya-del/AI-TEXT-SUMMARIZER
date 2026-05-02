@@ -10,6 +10,8 @@ function App() {
   const [aiReady, setAiReady] = useState(false);
 // USED TO SET THE LENGTH OF THE SUMMARY, BUT FOR NOW IT'S FIXED TO SHORT
   const [length, setLength] = useState("short");
+  // history state
+  const [history, setHistory] = useState([]);
 
   const prompts = {
     short:    `Summarize the following text in 2-3 sentences only: ${text}`,
@@ -39,7 +41,14 @@ const summarizeText = async () => {
   try {
     // uses selected prompt instead of hardcoded one
     const response = await window.puter.ai.chat(prompts[length]);
-    setSummary(response.message?.content || "No summary returned.")
+    const result = response.message?.content || "No summary returned.";
+    setSummary(result);
+
+    // Save to History
+    setHistory((prev) => [
+      { text: text.slice(0, 60) + "...", summary: result, length: length }, 
+      ...prev
+    ]);
 
   }
   catch (err) {
@@ -103,6 +112,7 @@ const summarizeText = async () => {
       <div className="mt-6 space-y-4 text-white">
        {summary && (
         <div className="p-4 bg-gray-700/60 border border-gray-500 rounded-xl whitespace-pre-wrap">
+          <p className="text-xs text-green-400 mb-2 uppercase tracking-widest">Latest</p>
           {summary}
         </div>
        )}
@@ -114,6 +124,20 @@ const summarizeText = async () => {
         )}
 
       </div>
+      {history.length > 0 && (
+        <div className="mt-6">
+          <p className="text-gray-400 text-sm mb-3">Recent Summaries</p>
+          {history.map((item, index) => (
+            <div key={index}
+              className="mb-3 p-4 bg-gray-800/60 border border-gray-600 rounded-xl cursor-pointer hover:border-gray-400 transition"
+              onClick={() => setSummary(item.summary)}
+            >
+              <p className="text-gray-400 text-xs mb-1 capitalize">{item.length} summary</p>
+              <p className="text-gray-300 text-sm">{item.text}</p>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   </div>
   );
